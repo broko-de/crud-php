@@ -21,6 +21,7 @@ class PersonaController  {
 
     }
     getList = () => {
+        let contextClass = this;
         const url = "src/controller/PersonaController.php?action=getList"
         $.ajax({
             type: "GET",
@@ -29,8 +30,7 @@ class PersonaController  {
         }).done((resp)=>{
             if(resp.status=="Ok"){   
                 console.log('Success:', resp);
-                const p = new PersonaController();     
-                p.renderResult(resp.data);
+                contextClass.renderResult(resp.data);
             }else{
                 alert("Se produjo un error");
             }
@@ -38,6 +38,7 @@ class PersonaController  {
     };
 
     save = () => {   
+        let contextClass = this;
         $("#formPersona").submit(function(e){
             e.preventDefault();
             let data = {};
@@ -55,8 +56,7 @@ class PersonaController  {
                 if(resp.status=="Ok"){   
                     $("#alertSuccessMsg").html(resp.message);
                     $("#alertSuccess").show();                    
-                    const p = new PersonaController();     
-                    p.getList();
+                    contextClass.getList();
                     $("#personaModal").modal('hide')
                     $("#formPersona").trigger("reset");
                 }else{
@@ -98,6 +98,7 @@ class PersonaController  {
     }
 
     deleteConfirm = () => {
+        let contextClass = this;
         $("#formDeletePersona").submit(function(e){
             e.preventDefault();
             let id = $("#idPersonaDelete").val();
@@ -105,18 +106,16 @@ class PersonaController  {
                 type: "POST",
                 url: "src/controller/PersonaController.php",
                 data : {action:"delete",id_persona:id},
-                dataType: 'json'
+                dataType: 'json',
             }).done((resp)=>{
                 if(resp.status=="Ok"){   
                     $("#alertSuccessMsg").html(resp.message);
                     $("#alertSuccess").show();                    
-                    const p = new PersonaController();     
-                    p.getList();
+                    contextClass.getList();
                     $("#deletePersonaModal").modal('hide')
                 }else{
                     alert("No se pudo eliminar la persona");
                 }
-                
             });
         });
     }
@@ -135,5 +134,4 @@ $(function () {
     const personaController = new PersonaController();
     personaController.init();
     $("#alertSuccess").hide();                    
-
 });
